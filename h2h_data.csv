@@ -1,5 +1,4 @@
-1,2,3
-Novak Djokovic,Novak Djokovic,Roger Federer
-30,27,16
-Rafael Nadal,Roger Federer,Rafael Nadal
-29,23,24
+1,2
+Novak Djokovic*30,Rafael Nadal*29
+Novak Djokovic*27,Roger Federer*23
+Rafael Nadal*24,Roger Federer*16
