@@ -1,4 +1,4 @@
-1,2
-Novak Djokovic*30,Rafael Nadal*29
-Novak Djokovic*27,Roger Federer*23
-Rafael Nadal*24,Roger Federer*16
+Person1,Person2,Score1,Score2,Pct1,Pct2,Img1,Img2
+Novak Djokovic,Rafael Nadal,30,29,50.84745763,49.15254237,https://raw.githubusercontent.com/dburkeio/data_viz_final/main/djokovic.jpeg,https://raw.githubusercontent.com/dburkeio/data_viz_final/main/nadal.jpeg
+Novak Djokovic,Roger Federer,27,23,54,46,https://raw.githubusercontent.com/dburkeio/data_viz_final/main/djokovic.jpeg,https://raw.githubusercontent.com/dburkeio/data_viz_final/main/federer.jpeg
+Rafael Nadal,Roger Federer,24,16,60,40,https://raw.githubusercontent.com/dburkeio/data_viz_final/main/nadal.jpeg,https://raw.githubusercontent.com/dburkeio/data_viz_final/main/federer.jpeg
