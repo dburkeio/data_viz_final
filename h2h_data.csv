@@ -1,4 +1,4 @@
-Person1,Person2,Score1,Score2,Pct1,Pct2,hard1,hard2,hard_pct1,hard_pct2,clay1,clay2,clay_pct1,clay_pct2,grass1,grass2,grass_pct1,grass_pct2,Img1,Img2
+Person1,Person2,all1,all2,all_pct1,all_pct2,hard1,hard2,hard_pct1,hard_pct2,clay1,clay2,clay_pct1,clay_pct2,grass1,grass2,grass_pct1,grass_pct2,Img1,Img2
 Novak Djokovic,Rafael Nadal,30,29,50.84745763,49.15254237,20,7,74.07407407,25.92592593,8,20,28.57142857,71.42857143,2,2,50,50,https://raw.githubusercontent.com/dburkeio/data_viz_final/main/djokovic.jpeg,https://raw.githubusercontent.com/dburkeio/data_viz_final/main/nadal.jpeg
 Novak Djokovic,Roger Federer,27,23,54,46,20,18,52.63157895,47.36842105,4,4,50,50,3,1,75,25,https://raw.githubusercontent.com/dburkeio/data_viz_final/main/djokovic.jpeg,https://raw.githubusercontent.com/dburkeio/data_viz_final/main/federer.jpeg
 Rafael Nadal,Roger Federer,24,16,60,40,9,11,45,55,14,2,87.5,12.5,1,3,25,75,https://raw.githubusercontent.com/dburkeio/data_viz_final/main/nadal.jpeg,https://raw.githubusercontent.com/dburkeio/data_viz_final/main/federer.jpeg
