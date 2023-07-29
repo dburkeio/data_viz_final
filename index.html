@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<style>
+html
+{
+  scroll-behavior: smooth;
+}
+body
+{
+  font-family: arial, helvetica, sans-serif;
+}
+#treemap
+{
+  width: auto;
+}
+h3
+{
+  text-align: center;
+}
+#scatterplot
+{
+  width: 620px;
+  margin: 0px auto;
+  position: relative;
+  padding-right: 200px;
+  cursor: pointer;
+}
+#head2head
+{
+  width: 830px;
+  margin-left:200px;
+  height:auto;
+}
+.reading
+{
+  /*border: 2px solid black;*/
+  padding: 10px;
+  position: relative;
+}
+#s1
+{
+  width: 200px;
+  height: 600px;
+  float:left;
+  
+  margin-left: 200px;
+}
+#s2
+{
+  width: 200px;
+  height: 600px;
+  position: absolute;
+  top: 50px;
+  left:710px;
+}
+#s3
+{
+  width: 200px;
+  height: 600px;
+  float:left;
+  margin-top: 50px;
+}
+a
+{
+  display: block;
+  text-decoration: none;
+  font-size: 40px;
+  width: 190px;
+  text-align: center;
+  border: 1px solid gray;
+  margin: 5px;
+  color:black;
+  position: absolute;
+  bottom: 10px;
+  padding-bottom:10px;
+  border-radius: 10px;
+}
+.headers
+{
+  padding-top:20px;
+}
+.surface
+{
+  float: left;
+  width: 50px;
+  border: 1px solid black;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: bold;
+}
+#surface_all
+{
+  background-color: yellow;
+}
+#surface_hard
+{
+  background-color: #5d88fc;
+}
+#surface_clay
+{
+  background-color: #d66363;
+}
+#surface_grass
+{
+  background-color: #6de880;
+}
+#raw
+{
+  margin-left: 50px;
+}
+.valtype
+{
+  float: left;
+  width: 100px;
+  border: 1px solid black;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+}
+.chosen,.chosen1
+{
+  height: 30px;
+}
+#landing
+{
+  height: 65vh;
+  width: 100vw;
+  margin: 0px;
+  padding-top: 35vh;
+}
+#landingimages
+{
+width: 50%;
+margin:0px auto;
+}
+#landingdown
+{
+  width: 50%;
+  margin:0px auto;
+  height: 50px;
+}
+#landingdown a
+{
+  width: 50%;
+  margin:0px auto;
+}
+img
+{
+  padding-left: 50px;
+}
+h1,h4
+{
+  text-align: center;
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div id="landing">
+  <h1>The Big 3: A Comparison of the Greatest Tennis Players</h1>
+  <h4>CS 416 Daniel Burke</h4>
+  <div id="landingimages">
+  <img src="https://raw.githubusercontent.com/dburkeio/data_viz_final/main/djokovic.jpeg" alt="Novak Djokovic" width="150px" height="150px"></img>
+  <img src="https://raw.githubusercontent.com/dburkeio/data_viz_final/main/federer.jpeg" alt="Roger Federer" width="150px" height="150px"></img>
+  <img src="https://raw.githubusercontent.com/dburkeio/data_viz_final/main/nadal.jpeg" alt="Rafael Nadal" width="150px" height="150px"></img>
+  </div>
+  <div id="landingdown"><a href="#treemap">⌄</a></div>
+</div>
+<div id="treemap">
+  <h3>Slams Won from 2003 - Present (July 2023)</h3>
+  <div id="s1" class="reading">
+    <p>
+    During the last 20 years 3 men have dominated the highest level of tennis.
+  </p>
+<p>
+  Novak Djokovic, Rafael Nadal, and Roger Federer have individually won more
+    slams, the largest tennis tournaments, than all of their competitors combined.
+  </p>
+    <div class="down"><a href="#scatterplot">⌄</a></div>
+  </div>
+</div>
+
+<div id="scatterplot">
+  <h3 class="headers">The Big 3: Cumulative Slams by Year End</h3>
+  <div id="s2" class="reading">
+  <p>
+  Federer started winning the earliest of the Big 3, winning his first slam in 2003.
+  </p>
+  <p>
+  Over time Nadal and Djokovic caught up to Federer and eventually surpassed his slam total of 20.
+  </p>
+  <p>
+  Currently, Djokovic leads the Big 3 with 23 slams.
+  </p>
+    <div class="down"><a href="#head2head">⌄</a></div>
+  </div>
+</div>
+
+<div id="head2head">
+  <div id="s3" class="reading">
+    <p>Each playing surface has its own playing conditions. Djokovic and Federer are commonly seen as all-around players, while Nadal excels on clay.</p>
+    <p>Djokovic boasts a winning record against both Federer and Nadal when all surfaces are considered.</p>
+    <p></p>
+  </div>
+  <h3>The Big 3: Head to Head Records by Surface</h3>
+  <div class="surface" id="surface_all">All</div>
+  <div class="surface" id="surface_hard">Hard</div>
+  <div class="surface" id="surface_clay">Clay</div>
+  <div class="surface" id="surface_grass">Grass</div>
+
+  <div class="valtype" id="raw">Total Matches</div>
+  <div class="valtype" id="percentages">Win %</div>
+
+  <div id="head2headrecords"></div>
+</div>
+
+
+<script>
+const NoleColor = "#C62828";
+const FedColor = "#0288D1";
+const RafaColor = "#FDD835";
+
+const TooltipBackground = "black";
+const scatterCircleSize = 10;
+const TooltipHeight = 50;
+const TooltipWidth = 150;
+
+document.getElementById("surface_all").setAttribute('class','surface chosen');
+document.getElementById("raw").setAttribute('class','valtype chosen1');
+
+function changeSelection(mine){
+document.getElementById("surface_all").setAttribute('class','surface');
+document.getElementById("surface_hard").setAttribute('class','surface');
+document.getElementById("surface_clay").setAttribute('class','surface');
+document.getElementById("surface_grass").setAttribute('class','surface');
+
+mine.setAttribute('class','surface chosen');
+}
+
+function changeDataType(mine){
+document.getElementById("raw").setAttribute('class','valtype');
+document.getElementById("percentages").setAttribute('class','valtype');
+
+mine.setAttribute('class','valtype chosen1');
+}
+
+function getChosen(){
+  var x = document.getElementsByClassName("chosen");
+  x = x[0].getAttribute('id');
+  return x.split("_")[1]
+}
+
+function getChosenDataType(){
+  var x = document.getElementsByClassName("chosen1");
+  x = x[0].getAttribute('id');
+  return x;
+}
+
+
+
+var margin = {top: 0, right: 10, bottom: 10, left: 10},
+  width = 600 - margin.left - margin.right,
+  height = 600 - margin.top - margin.bottom;
+
+var svg = d3.select("#treemap")
+.append("svg")
+  .attr("width", width + margin.left + margin.right)
+  .attr("height", height + margin.top + margin.bottom)
+.append("g")
+  .attr("transform",
+        "translate(" + margin.left + "," + margin.top + ")");
+
+d3.csv('https://raw.githubusercontent.com/dburkeio/data_viz_final/main/slam_totals.csv', function(data) {
+
+  var root = d3.stratify()
+    .id(function(d) { return d.Name; })
+    .parentId(function(d) { return d.Parent; })
+    (data);
+  root.sum(function(d) { return +d.Slams })
+
+  d3.treemap()
+    .size([width, height])
+    .padding(4)
+    (root)
+
+var colorScale = d3.scaleLinear().domain([15,25])
+  .range(["white", "green"])
+
+  svg.selectAll("rect")
+    .data(root.leaves())
+    .enter()
+    .append("rect")
+      .attr('x', function (d) { return d.x0; })
+      .attr('y', function (d) { return d.y0; })
+      .attr('width', function (d) { return d.x1 - d.x0; })
+      .attr('height', function (d) { return d.y1 - d.y0; })
+      .attr('id', function(d){return d.data.Name.split(" ")[0] + "_treemap"})
+      .attr('class', function(d){return "treemap_rect"})
+      .style("stroke", "black")
+      .style("fill", function (d) { return colorScale(d.data.Slams);});
+
+  svg.selectAll("text")
+    .data(root.leaves())
+    .enter()
+    .append("text")
+      .attr("x", function(d){ return d.x0+10})
+      .attr("y", function(d){ return d.y0+20})    
+      .text(function(d){ return (d.data.Name)})
+      .attr("font-size", "15px")
+      .attr("fill", "black");
+
+  svg.selectAll("p")
+    .data(root.leaves())
+    .enter()
+    .append("text")
+      .attr("x", function(d){ return d.x0+10})    
+      .attr("y", function(d){ return d.y0+60})    
+      .text(function(d){ return (d.data.Slams)})
+      .attr("font-size", "25px")
+      .attr("fill", "black");
+
+
+})
+
+var margin2 = {top: 10, right: 30, bottom: 30, left: 60};
+  var width2 = 800 - margin2.left - margin2.right;
+  var height2 = 660 - margin2.top - margin2.bottom;
+
+var svg2 = d3.select("#scatterplot")
+  .append("svg")
+    .attr("width", width2 + margin2.left + margin2.right)
+    .attr("height", height2 + margin2.top + margin2.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin2.left + "," + margin2.top + ")");
+
+d3.csv("https://raw.githubusercontent.com/dburkeio/data_viz_final/main/totals_by_year.csv",
+  function(data) {
+    var x = d3.scaleLinear()
+      .domain([2003,2023])
+      .range([ 0, width ]);
+    var bottomx = d3.scaleTime()
+      .domain([new Date(2003, 0, 1), new Date(2023, 0, 1)])
+      .range([ 0, width ]);
+    svg2.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(bottomx));
+    var y = d3.scaleLinear()
+      .domain( [0, 25])
+      .range([ height, 0 ]);
+    svg2.append("g")
+      .call(d3.axisLeft(y));
+
+    svg2.append("path") //Djokovic lines
+      .datum(data)
+      .attr("fill", "none")
+      .attr("stroke", NoleColor)
+      .attr("stroke-width", 1.5)
+      .attr("d", d3.line()
+        .x(function(d) { return x(d.Date) })
+        .y(function(d) { return y(d.Djokovic) })
+        )
+      svg2.append("path") //Federer lines
+      .datum(data)
+      .attr("fill", "none")
+      .attr("stroke", FedColor)
+      .attr("stroke-width", 1.5)
+      .attr("d", d3.line()
+        .x(function(d) { return x(d.Date) })
+        .y(function(d) { return y(d.Federer) })
+        )
+      svg2.append("path")  //Nadal lines
+      .datum(data)
+      .attr("fill", "none")
+      .attr("stroke", RafaColor)
+      .attr("stroke-width", 1.5)
+      .attr("d", d3.line()
+        .x(function(d) { return x(d.Date) })
+        .y(function(d) { return y(d.Nadal) })
+        )
+
+
+  var Tooltip = d3.select("#scatterplot")
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "1px")
+    .style("border-radius", "5px")
+    .style("padding", "5px")
+    .style("position", "absolute")
+
+    var mouseover = function(d) {
+      Tooltip
+        .style("opacity", 1)
+    }
+    var mousemove = function(d) {
+      Tooltip
+        .html("Djokovic<hr>" + "Year: " + d.Date + "<br>Slams: " + d.Djokovic)
+        .style("left", (d3.mouse(this)[0]+70) + "px")
+        .style("top", (d3.mouse(this)[1]) + "px")
+    }
+    var mousemove1 = function(d) {
+      Tooltip
+        .html("Federer<hr>" + "Year: " + d.Date + "<br>Slams: " + d.Federer)
+        .style("left", (d3.mouse(this)[0]+70) + "px")
+        .style("top", (d3.mouse(this)[1]) + "px")
+    }
+    var mousemove2 = function(d) {
+      Tooltip
+        .html("Nadal<hr>" + "Year: " + d.Date + "<br>Slams: " + d.Nadal)
+        .style("left", (d3.mouse(this)[0]+70) + "px")
+        .style("top", (d3.mouse(this)[1]) + "px")
+    }
+    var mouseleave = function(d) {
+      Tooltip
+        .style("opacity", 0)
+        .style("left","0")
+        .style("top","0") //hacky way to get the box out of the way for the next dot
+    }
+    // Add Djokovic dots
+    svg2
+      .append("g")
+      .selectAll("dot")
+      .data(data)
+      .enter()
+      .append("circle")
+        .attr("cx", function(d) { return x(d.Date); } )
+        //.attr("cx", function(d,i) { return i} )
+        .attr("cy", function(d) { return y(d.Djokovic) } )
+        .attr("r", scatterCircleSize)
+        .attr("fill", NoleColor)
+        .on("mouseover", mouseover)
+        .on("mousemove", mousemove)
+        .on("mouseout", mouseleave);
+
+    // Add Fed dots
+    svg2
+      .append("g")
+      .selectAll("dot")
+      .data(data)
+      .enter()
+      .append("circle")
+        .attr("cx", function(d) { return x(d.Date); } )
+        //.attr("cx", function(d,i) { return i} )
+        .attr("cy", function(d) { return y(d.Federer) } )
+        .attr("r", scatterCircleSize)
+        .attr("fill", FedColor)
+        .on("mouseover", mouseover)
+        .on("mousemove", mousemove1)
+        .on("mouseout", mouseleave);
+    // Add Nadal dots
+    svg2
+      .append("g")
+      .selectAll("dot")
+      .data(data)
+      .enter()
+      .append("circle")
+        .attr("cx", function(d) { return x(d.Date); } )
+        //.attr("cx", function(d,i) { return i} )
+        .attr("cy", function(d) { return y(d.Nadal) } )
+        .attr("r", scatterCircleSize)
+        .attr("fill", RafaColor)
+        .on("mouseover", mouseover)
+        .on("mousemove", mousemove2)
+        .on("mouseout", mouseleave);
+
+//add key to the scatterplot
+    svg2
+      .append("rect")
+        .attr("height", 20)
+        .attr("width", 20)
+        .attr("x", 20)
+        .attr("y", 20)
+        .attr("fill", NoleColor);
+
+    svg2
+      .append("rect")
+        .attr("height", 20)
+        .attr("width", 20)
+        .attr("x", 20)
+        .attr("y", 50)
+        .attr("fill", FedColor);
+
+    svg2
+      .append("rect")
+        .attr("height", 20)
+        .attr("width", 20)
+        .attr("x", 20)
+        .attr("y", 80)
+        .attr("fill", RafaColor);
+
+    svg2
+      .append("text")
+        .text("Key:")
+        .attr("x", 20)
+        .attr("y", 10)
+        .attr("fill", "black");
+    svg2
+      .append("text")
+        .text("Novak Djokovic")
+        .attr("x", 50)
+        .attr("y", 35)
+        .attr("fill", "black");
+    svg2
+      .append("text")
+        .text("Roger Federer")
+        .attr("x", 50)
+        .attr("y", 65)
+        .attr("fill", "black");
+    svg2
+      .append("text")
+        .text("Rafael Nadal")
+        .attr("x", 50)
+        .attr("y", 95)
+        .attr("fill", "black");
+})
+
+var margin3 = {top: 0, right: 10, bottom: 10, left: 10},
+  width3 = 600 - margin3.left - margin3.right,
+  height3 = 600 - margin3.top - margin3.bottom;
+
+var svg3 = d3.select("#head2headrecords")
+  .append("svg")
+    .attr("width", width3 + margin3.left + margin3.right)
+    .attr("height", height3 + margin3.top + margin3.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin3.left + "," + margin3.top + ")");
+
+
+d3.csv("https://raw.githubusercontent.com/dburkeio/data_viz_final/main/h2h_data.csv",
+  function(data) {
+    var x = d3.scaleLinear()
+      .domain([0,100])
+      .range([ 0, 500 ]);
+
+      function mycolor(person){
+        if(person == "Novak Djokovic"){
+          return NoleColor;
+        }
+        if(person == "Roger Federer"){
+          return FedColor;
+        }
+        if(person == "Rafael Nadal"){
+          return RafaColor;
+        }        
+      }
+
+    function updateGraphSurface(){
+      console.log("UPDATE NOW");
+      changeSelection(this);
+      drawGraph();
+    }
+    function updateGraphData(){
+      console.log("UPDATE NOW");
+      changeDataType(this);
+      drawGraph();
+    }
+
+    d3.selectAll(".surface").on("click", updateGraphSurface);
+    d3.selectAll(".valtype").on("click", updateGraphData);
+
+    function drawGraph(){ //redraw graph when we change surface or data type
+
+    var myheight = 30;
+
+    svg3
+      .append("g")
+      .selectAll("rect")
+      .data(data)
+      .enter()
+      .append("rect")
+        .attr("width", function(d,i) {
+          var mysurface = getChosen();
+          if(getChosenDataType() == "raw")
+          {
+            var mydata = mysurface + "1";
+            var otherdata = mysurface + "2";
+            var mymax = (d[mydata]/1.0) + (d[otherdata] / 1.0);
+            var x = d3.scaleLinear()
+            .domain([0,mymax])
+            .range([ 0, 500 ]);
+          }
+          else
+          {
+            var x = d3.scaleLinear()
+            .domain([0,100])
+            .range([ 0, 500 ]);
+            var mydata = mysurface + "_pct1";
+          }
+          return x(d[mydata]); } )
+        .attr("height", myheight)
+        .attr("fill", function(d,i){
+          return mycolor(d.Person1)})
+        .attr("y", function(d,i){return 150+ i*175});
+
+
+
+    svg3
+      .append("g")
+      .selectAll("rect")
+      .data(data)
+      .enter()
+      .append("rect")
+        .attr("width", function(d,i) {
+          var mysurface = getChosen();
+          if(getChosenDataType() == "raw")
+          {
+            var mydata = mysurface + "2";
+            var otherdata = mysurface + "1";
+            var mymax = (d[mydata]/1.0) + (d[otherdata] / 1.0);
+            var x = d3.scaleLinear()
+            .domain([0,mymax])
+            .range([ 0, 500 ]);
+          }
+          else
+          {
+            var x = d3.scaleLinear()
+            .domain([0,100])
+            .range([ 0, 500 ]);
+            var mydata = mysurface + "_pct2";
+          }
+          return x(d[mydata]); } )
+        .attr("height", myheight)
+        .attr("fill", function(d,i){
+          return mycolor(d.Person2)})
+        .attr("y", function(d,i){return 150+ i*175})
+        .attr("x", function(d,i) {
+          var mysurface = getChosen();
+          if(getChosenDataType() == "raw")
+          {
+            var mydata = mysurface + "2";
+            var otherdata = mysurface + "1";
+            var mymax = (d[mydata]/1.0) + (d[otherdata] / 1.0);
+            var x = d3.scaleLinear()
+            .domain([0,mymax])
+            .range([ 0, 500 ]);
+          }
+          else
+          {
+            var x = d3.scaleLinear()
+            .domain([0,100])
+            .range([ 0, 500 ]);
+            var mydata = mysurface + "_pct2";
+            var otherdata = mysurface + "_pct1";
+          }
+          return x(d[otherdata]); } );
+
+      svg3
+      .append("g")
+      .selectAll("text")
+      .data(data)
+      .enter()
+      .append("text")
+        .text(function(d,i) {
+          var mysurface = getChosen();
+          if(getChosenDataType() == "raw")
+          {
+            var mydata = mysurface + "1";
+            var otherdata = mysurface + "2";
+            var mymax = (d[mydata]/1.0) + (d[otherdata] / 1.0);
+            var x = d3.scaleLinear()
+            .domain([0,mymax])
+            .range([ 0, 500 ]);
+            var isPercentage = "";
+          }
+          else
+          {
+            var x = d3.scaleLinear()
+            .domain([0,100])
+            .range([ 0, 500 ]);
+            var mydata = mysurface + "_pct1";
+            var isPercentage = "%";
+          }
+          return d.Person1 + ": " + (Math.round(d[mydata] * 100) / 100) + isPercentage; } )
+        .attr("font-size", "22px")
+        .attr("fill", "white")
+        .attr("y", function(d,i){return 170+ i*175})
+        .attr("paint-order","stroke")
+        .attr("stroke","black")
+        .attr("stroke-width", 3);
+
+      svg3
+      .append("g")
+      .selectAll("text")
+      .data(data)
+      .enter()
+      .append("text")
+        .text(function(d,i) {
+          //console.log(d)
+          var mysurface = getChosen();
+          if(getChosenDataType() == "raw")
+          {
+            var mydata = mysurface + "2";
+            //console.log(d[mydata]);
+            var otherdata = mysurface + "1";
+            //console.log(d[otherdata]);
+            var mymax = (d[mydata]/1.0) + (d[otherdata] / 1.0);
+            //console.log(mymax);
+            var x = d3.scaleLinear()
+            .domain([0,mymax])
+            .range([ 0, 500 ]);
+            var isPercentage = "";
+          }
+          else
+          {
+            var x = d3.scaleLinear()
+            .domain([0,100])
+            .range([ 0, 500 ]);
+            var mydata = mysurface + "_pct2";
+            var isPercentage = "%";
+          }
+          return d.Person2 + ": " + (Math.round(d[mydata] * 100) / 100) + isPercentage; } )
+        .attr("font-size", "22px")
+        .attr("fill", "white")
+        .attr("y", function(d,i){return 170+ i*175})
+        .attr("paint-order","stroke")
+        .attr("stroke","black")
+        .attr("stroke-width", 3)
+        .attr("x",270);
+
+      }//drawGraph
+
+      drawGraph();
+
+    svg3
+      .append("g")
+      .selectAll("image")
+      .data(data)
+      .enter()
+      .append("image")
+      .attr("href",function(d){return d.Img1;})
+      .attr("height", 100 )
+      .attr("width", 100 )
+      .attr("y",function(d,i){return 40 + i*175;})
+      .attr("x", 25 );    
+
+    svg3
+      .append("g")
+      .selectAll("image")
+      .data(data)
+      .enter()
+      .append("image")
+      .attr("href",function(d){return d.Img2;})
+      .attr("height", 100 )
+      .attr("width", 100 )
+      .attr("y",function(d,i){return 40 + i*175;})
+      .attr("x", 325 ); 
+
+})
+
+</script>
+
+</body>
+
